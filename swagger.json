@@ -1,127 +1,513 @@
 ﻿{
-  "openapi": "3.0.0",
-  "info": {
-    "title": "Zestora API",
-    "version": "1.0.0",
-    "description": "API documentation for Zestora backend"
-  },
-  "servers": [
-    {
-      "url": "https://zestora-2zcr.onrender.com",
-      "description": "Render Production Server"
-    }
-  ],
-  "paths": {
-    "/api/auth/register": {
-      "post": {
-        "summary": "Register new user",
-        "tags": ["Auth"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "password": { "type": "string" }
-                },
-                "required": ["username", "password"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "User registered successfully"
-          }
-        }
-      }
-    },
+    "servers":  [
+                    {
+                        "url":  "http://localhost:3000/api",
+                        "description":  "Local Development"
+                    },
+                    {
+                        "url":  "https://zestora-2zcr.onrender.com/api",
+                        "description":  "Production Server"
+                    }
+                ],
+    "paths":  {
+                  "/cart/my":  {
+                                   "get":  {
+                                               "summary":  "Get my cart",
+                                               "tags":  [
+                                                            "Cart"
+                                                        ],
+                                               "description":  "Retrieve shopping cart of authenticated user",
+                                               "security":  [
+                                                                {
+                                                                    "BearerAuth":  [
 
-    "/api/auth/login": {
-      "post": {
-        "summary": "Login user",
-        "tags": ["Auth"],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "password": { "type": "string" }
-                },
-                "required": ["username", "password"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Login success + returns token"
-          }
-        }
-      }
-    },
+                                                                                   ]
+                                                                }
+                                                            ],
+                                               "responses":  {
+                                                                 "401":  {
+                                                                             "description":  "Unauthorized"
+                                                                         },
+                                                                 "500":  {
+                                                                             "description":  "Server error"
+                                                                         },
+                                                                 "200":  {
+                                                                             "description":  "User cart retrieved successfully"
+                                                                         }
+                                                             }
+                                           }
+                               },
+                  "/auth/register":  {
+                                         "post":  {
+                                                      "summary":  "Register new user",
+                                                      "tags":  [
+                                                                   "Auth"
+                                                               ],
+                                                      "description":  "Create a new user account",
+                                                      "responses":  {
+                                                                        "201":  {
+                                                                                    "description":  "User registered successfully"
+                                                                                },
+                                                                        "500":  {
+                                                                                    "description":  "Server error"
+                                                                                },
+                                                                        "400":  {
+                                                                                    "description":  "Validation error or email already exists"
+                                                                                }
+                                                                    },
+                                                      "requestBody":  {
+                                                                          "content":  {
+                                                                                          "application/json":  {
+                                                                                                                   "schema":  {
+                                                                                                                                  "properties":  {
+                                                                                                                                                     "email":  {
+                                                                                                                                                                   "format":  "email",
+                                                                                                                                                                   "example":  "john@example.com",
+                                                                                                                                                                   "type":  "string"
+                                                                                                                                                               },
+                                                                                                                                                     "name":  {
+                                                                                                                                                                  "type":  "string",
+                                                                                                                                                                  "example":  "John Doe"
+                                                                                                                                                              },
+                                                                                                                                                     "password":  {
+                                                                                                                                                                      "example":  "password123",
+                                                                                                                                                                      "minLength":  6,
+                                                                                                                                                                      "type":  "string"
+                                                                                                                                                                  }
+                                                                                                                                                 },
+                                                                                                                                  "type":  "object",
+                                                                                                                                  "required":  [
+                                                                                                                                                   "name",
+                                                                                                                                                   "email",
+                                                                                                                                                   "password"
+                                                                                                                                               ]
+                                                                                                                              }
+                                                                                                               }
+                                                                                      },
+                                                                          "required":  true
+                                                                      }
+                                                  }
+                                     },
+                  "/cart/remove/{productId}":  {
+                                                   "delete":  {
+                                                                  "description":  "Remove a specific product from cart",
+                                                                  "tags":  [
+                                                                               "Cart"
+                                                                           ],
+                                                                  "security":  [
+                                                                                   {
+                                                                                       "BearerAuth":  [
 
-    "/api/cart/my": {
-      "get": {
-        "summary": "Get my cart",
-        "tags": ["Cart"],
-        "security": [
-          { "BearerAuth": [] }
-        ],
-        "responses": {
-          "200": {
-            "description": "User cart"
-          },
-          "401": {
-            "description": "Unauthorized (missing or invalid token)"
-          }
-        }
-      }
-    },
+                                                                                                      ]
+                                                                                   }
+                                                                               ],
+                                                                  "summary":  "Remove item from cart",
+                                                                  "parameters":  [
+                                                                                     {
+                                                                                         "example":  "123",
+                                                                                         "name":  "productId",
+                                                                                         "schema":  {
+                                                                                                        "type":  "string"
+                                                                                                    },
+                                                                                         "required":  true,
+                                                                                         "in":  "path",
+                                                                                         "description":  "Product ID to remove from cart"
+                                                                                     }
+                                                                                 ],
+                                                                  "responses":  {
+                                                                                    "401":  {
+                                                                                                "description":  "Unauthorized"
+                                                                                            },
+                                                                                    "404":  {
+                                                                                                "description":  "Cart not found"
+                                                                                            },
+                                                                                    "500":  {
+                                                                                                "description":  "Server error"
+                                                                                            },
+                                                                                    "200":  {
+                                                                                                "description":  "Item removed from cart successfully"
+                                                                                            }
+                                                                                }
+                                                              }
+                                               },
+                  "/cart/update":  {
+                                       "put":  {
+                                                   "description":  "Update quantity of item in cart. If quantity \u003c= 0, item will be removed.",
+                                                   "tags":  [
+                                                                "Cart"
+                                                            ],
+                                                   "security":  [
+                                                                    {
+                                                                        "BearerAuth":  [
 
-    "/api/cart/add": {
-      "post": {
-        "summary": "Add item to cart",
-        "tags": ["Cart"],
-        "security": [
-          { "BearerAuth": [] }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "productId": { "type": "string" },
-                  "quantity": { "type": "number" }
-                },
-                "required": ["productId", "quantity"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Item added to cart"
-          }
-        }
-      }
-    }
-  },
+                                                                                       ]
+                                                                    }
+                                                                ],
+                                                   "summary":  "Update cart item quantity",
+                                                   "responses":  {
+                                                                     "401":  {
+                                                                                 "description":  "Unauthorized"
+                                                                             },
+                                                                     "404":  {
+                                                                                 "description":  "Cart not found or Item not found in cart"
+                                                                             },
+                                                                     "500":  {
+                                                                                 "description":  "Server error"
+                                                                             },
+                                                                     "400":  {
+                                                                                 "description":  "Missing required fields"
+                                                                             },
+                                                                     "200":  {
+                                                                                 "description":  "Cart item updated successfully"
+                                                                             }
+                                                                 },
+                                                   "requestBody":  {
+                                                                       "content":  {
+                                                                                       "application/json":  {
+                                                                                                                "schema":  {
+                                                                                                                               "properties":  {
+                                                                                                                                                  "productId":  {
+                                                                                                                                                                    "type":  "string",
+                                                                                                                                                                    "example":  "123"
+                                                                                                                                                                },
+                                                                                                                                                  "quantity":  {
+                                                                                                                                                                   "type":  "integer",
+                                                                                                                                                                   "example":  2
+                                                                                                                                                               }
+                                                                                                                                              },
+                                                                                                                               "type":  "object",
+                                                                                                                               "required":  [
+                                                                                                                                                "productId",
+                                                                                                                                                "quantity"
+                                                                                                                                            ]
+                                                                                                                           }
+                                                                                                            }
+                                                                                   },
+                                                                       "required":  true
+                                                                   }
+                                               }
+                                   },
+                  "/profile/me":  {
+                                      "get":  {
+                                                  "summary":  "Get user profile",
+                                                  "tags":  [
+                                                               "Profile"
+                                                           ],
+                                                  "description":  "Get profile of authenticated user",
+                                                  "security":  [
+                                                                   {
+                                                                       "BearerAuth":  [
 
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    }
-  }
+                                                                                      ]
+                                                                   }
+                                                               ],
+                                                  "responses":  {
+                                                                    "401":  {
+                                                                                "description":  "Unauthorized"
+                                                                            },
+                                                                    "500":  {
+                                                                                "description":  "Server error"
+                                                                            },
+                                                                    "200":  {
+                                                                                "description":  "User profile (name, email, role)"
+                                                                            }
+                                                                }
+                                              }
+                                  },
+                  "/cart/add":  {
+                                    "post":  {
+                                                 "description":  "Add item to cart or increase quantity if exists",
+                                                 "tags":  [
+                                                              "Cart"
+                                                          ],
+                                                 "security":  [
+                                                                  {
+                                                                      "BearerAuth":  [
+
+                                                                                     ]
+                                                                  }
+                                                              ],
+                                                 "summary":  "Add item to cart",
+                                                 "responses":  {
+                                                                   "201":  {
+                                                                               "description":  "Item added to cart successfully"
+                                                                           },
+                                                                   "500":  {
+                                                                               "description":  "Server error"
+                                                                           },
+                                                                   "400":  {
+                                                                               "description":  "productId is required"
+                                                                           },
+                                                                   "401":  {
+                                                                               "description":  "Unauthorized"
+                                                                           }
+                                                               },
+                                                 "requestBody":  {
+                                                                     "content":  {
+                                                                                     "application/json":  {
+                                                                                                              "schema":  {
+                                                                                                                             "properties":  {
+                                                                                                                                                "productId":  {
+                                                                                                                                                                  "type":  "string",
+                                                                                                                                                                  "example":  "123"
+                                                                                                                                                              },
+                                                                                                                                                "quantity":  {
+                                                                                                                                                                 "example":  1,
+                                                                                                                                                                 "default":  1,
+                                                                                                                                                                 "type":  "integer",
+                                                                                                                                                                 "minimum":  1
+                                                                                                                                                             }
+                                                                                                                                            },
+                                                                                                                             "type":  "object",
+                                                                                                                             "required":  [
+                                                                                                                                              "productId"
+                                                                                                                                          ]
+                                                                                                                         }
+                                                                                                          }
+                                                                                 },
+                                                                     "required":  true
+                                                                 }
+                                             }
+                                },
+                  "/auth/login":  {
+                                      "post":  {
+                                                   "summary":  "Login user",
+                                                   "tags":  [
+                                                                "Auth"
+                                                            ],
+                                                   "description":  "Authenticate user and return JWT token (valid for 7 days)",
+                                                   "responses":  {
+                                                                     "500":  {
+                                                                                 "description":  "Server error"
+                                                                             },
+                                                                     "400":  {
+                                                                                 "description":  "Invalid credentials"
+                                                                             },
+                                                                     "200":  {
+                                                                                 "description":  "Login successful - returns JWT token and user info"
+                                                                             }
+                                                                 },
+                                                   "requestBody":  {
+                                                                       "content":  {
+                                                                                       "application/json":  {
+                                                                                                                "schema":  {
+                                                                                                                               "properties":  {
+                                                                                                                                                  "password":  {
+                                                                                                                                                                   "type":  "string",
+                                                                                                                                                                   "example":  "password123"
+                                                                                                                                                               },
+                                                                                                                                                  "email":  {
+                                                                                                                                                                "format":  "email",
+                                                                                                                                                                "example":  "john@example.com",
+                                                                                                                                                                "type":  "string"
+                                                                                                                                                            }
+                                                                                                                                              },
+                                                                                                                               "type":  "object",
+                                                                                                                               "required":  [
+                                                                                                                                                "email",
+                                                                                                                                                "password"
+                                                                                                                                            ]
+                                                                                                                           }
+                                                                                                            }
+                                                                                   },
+                                                                       "required":  true
+                                                                   }
+                                               }
+                                  },
+                  "/profile/change-password":  {
+                                                   "put":  {
+                                                               "description":  "Change password of authenticated user. Old password must be correct.",
+                                                               "tags":  [
+                                                                            "Profile"
+                                                                        ],
+                                                               "security":  [
+                                                                                {
+                                                                                    "BearerAuth":  [
+
+                                                                                                   ]
+                                                                                }
+                                                                            ],
+                                                               "summary":  "Change password",
+                                                               "responses":  {
+                                                                                 "401":  {
+                                                                                             "description":  "Unauthorized"
+                                                                                         },
+                                                                                 "500":  {
+                                                                                             "description":  "Server error"
+                                                                                         },
+                                                                                 "400":  {
+                                                                                             "description":  "Old password incorrect"
+                                                                                         },
+                                                                                 "200":  {
+                                                                                             "description":  "Password changed successfully"
+                                                                                         }
+                                                                             },
+                                                               "requestBody":  {
+                                                                                   "content":  {
+                                                                                                   "application/json":  {
+                                                                                                                            "schema":  {
+                                                                                                                                           "properties":  {
+                                                                                                                                                              "oldPassword":  {
+                                                                                                                                                                                  "type":  "string",
+                                                                                                                                                                                  "example":  "oldPassword123"
+                                                                                                                                                                              },
+                                                                                                                                                              "newPassword":  {
+                                                                                                                                                                                  "example":  "newPassword123",
+                                                                                                                                                                                  "minLength":  6,
+                                                                                                                                                                                  "type":  "string"
+                                                                                                                                                                              }
+                                                                                                                                                          },
+                                                                                                                                           "type":  "object",
+                                                                                                                                           "required":  [
+                                                                                                                                                            "oldPassword",
+                                                                                                                                                            "newPassword"
+                                                                                                                                                        ]
+                                                                                                                                       }
+                                                                                                                        }
+                                                                                               },
+                                                                                   "required":  true
+                                                                               }
+                                                           }
+                                               },
+                  "/auth/me":  {
+                                   "get":  {
+                                               "summary":  "Get current authenticated user",
+                                               "tags":  [
+                                                            "Auth"
+                                                        ],
+                                               "description":  "Returns profile of currently authenticated user",
+                                               "security":  [
+                                                                {
+                                                                    "BearerAuth":  [
+
+                                                                                   ]
+                                                                }
+                                                            ],
+                                               "responses":  {
+                                                                 "401":  {
+                                                                             "description":  "Unauthorized - Missing or invalid token"
+                                                                         },
+                                                                 "404":  {
+                                                                             "description":  "User not found"
+                                                                         },
+                                                                 "500":  {
+                                                                             "description":  "Server error"
+                                                                         },
+                                                                 "200":  {
+                                                                             "description":  "Current user profile"
+                                                                         }
+                                                             }
+                                           }
+                               },
+                  "/profile/update-name":  {
+                                               "put":  {
+                                                           "description":  "Update the name of authenticated user",
+                                                           "tags":  [
+                                                                        "Profile"
+                                                                    ],
+                                                           "security":  [
+                                                                            {
+                                                                                "BearerAuth":  [
+
+                                                                                               ]
+                                                                            }
+                                                                        ],
+                                                           "summary":  "Update user name",
+                                                           "responses":  {
+                                                                             "401":  {
+                                                                                         "description":  "Unauthorized"
+                                                                                     },
+                                                                             "500":  {
+                                                                                         "description":  "Server error"
+                                                                                     },
+                                                                             "200":  {
+                                                                                         "description":  "Name updated successfully"
+                                                                                     }
+                                                                         },
+                                                           "requestBody":  {
+                                                                               "content":  {
+                                                                                               "application/json":  {
+                                                                                                                        "schema":  {
+                                                                                                                                       "properties":  {
+                                                                                                                                                          "name":  {
+                                                                                                                                                                       "type":  "string",
+                                                                                                                                                                       "example":  "Jane Doe"
+                                                                                                                                                                   }
+                                                                                                                                                      },
+                                                                                                                                       "type":  "object",
+                                                                                                                                       "required":  [
+                                                                                                                                                        "name"
+                                                                                                                                                    ]
+                                                                                                                                   }
+                                                                                                                    }
+                                                                                           },
+                                                                               "required":  true
+                                                                           }
+                                                       }
+                                           }
+              },
+    "components":  {
+                       "securitySchemes":  {
+                                               "BearerAuth":  {
+                                                                  "scheme":  "bearer",
+                                                                  "description":  "JWT token from login endpoint",
+                                                                  "type":  "http",
+                                                                  "bearerFormat":  "JWT"
+                                                              }
+                                           },
+                       "schemas":  {
+                                       "User":  {
+                                                    "properties":  {
+                                                                       "email":  {
+                                                                                     "type":  "string"
+                                                                                 },
+                                                                       "name":  {
+                                                                                    "type":  "string"
+                                                                                },
+                                                                       "_id":  {
+                                                                                   "type":  "string"
+                                                                               },
+                                                                       "role":  {
+                                                                                    "type":  "string"
+                                                                                }
+                                                                   },
+                                                    "type":  "object"
+                                                },
+                                       "Cart":  {
+                                                    "properties":  {
+                                                                       "userId":  {
+                                                                                      "type":  "string"
+                                                                                  },
+                                                                       "items":  {
+                                                                                     "items":  {
+                                                                                                   "$ref":  "#/components/schemas/CartItem"
+                                                                                               },
+                                                                                     "type":  "array"
+                                                                                 },
+                                                                       "_id":  {
+                                                                                   "type":  "string"
+                                                                               }
+                                                                   },
+                                                    "type":  "object"
+                                                },
+                                       "CartItem":  {
+                                                        "properties":  {
+                                                                           "productId":  {
+                                                                                             "type":  "string"
+                                                                                         },
+                                                                           "quantity":  {
+                                                                                            "type":  "integer",
+                                                                                            "minimum":  1
+                                                                                        }
+                                                                       },
+                                                        "type":  "object"
+                                                    }
+                                   }
+                   },
+    "openapi":  "3.0.0",
+    "info":  {
+                 "title":  "Zestora Ecommerce API",
+                 "description":  "Complete API documentation for Zestora backend",
+                 "version":  "1.0.0"
+             }
 }
