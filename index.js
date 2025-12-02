@@ -14,7 +14,7 @@ const app = express();
 
 // middlewares
 app.use(cors({
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "https://zestora-vercel.vercel.app", "https://zestora-2zcr.onrender.com"],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
