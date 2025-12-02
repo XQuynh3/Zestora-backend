@@ -13,7 +13,12 @@ const profileRoutes = require("./routes/profile.routes");
 const app = express();
 
 // middlewares
-app.use(cors());
+app.use(cors({
+  origin: "http://localhost:3000",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 
 // DB
@@ -23,10 +28,16 @@ connectDB();
 app.use("/api/auth", authRoutes);
 //app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
-app.use("/profile", profileRoutes);
+app.use("/api/profile", profileRoutes);
 
-// swagger
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// swagger with bearer token support
+const swaggerUiOptions = {
+  swaggerOptions: {
+    persistAuthorization: true,
+    defaultModelsExpandDepth: 1,
+  },
+};
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument, swaggerUiOptions));
 
 // health check
 app.get("/", (req, res) => {
