@@ -12,14 +12,11 @@ const profileRoutes = require("./routes/profile.routes");
 
 const app = express();
 
-// middlewares - CORS configuration
+// middlewares - CORS configuration (allow all origins for development)
 const corsOptions = {
-  origin: process.env.NODE_ENV === "production" 
-    ? ["https://zestora-2zcr.onrender.com", "https://zestora-vercel.vercel.app"]
-    : true,
+  origin: "*",  // Allow all origins (will be restricted in production)
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 app.use(cors(corsOptions));
