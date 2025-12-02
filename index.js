@@ -14,14 +14,23 @@ const app = express();
 
 // middlewares - CORS configuration (allow all origins for development)
 const corsOptions = {
-  origin: "*",  // Allow all origins (will be restricted in production)
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
 };
 
 app.use(cors(corsOptions));
 
+// Handle preflight requests
+app.options("*", cors());
+
 app.use(express.json());
+
+// Debug middleware
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`, req.headers.origin);
+  next();
+});
 
 // DB
 connectDB();
