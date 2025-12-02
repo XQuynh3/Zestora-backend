@@ -1,0 +1,30 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Zestora Ecommerce API",
+    "version": "1.0.0"
+  },
+  "servers": [
+    { "url": "http://localhost:3000/api" }
+  ],
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register user",
+        "responses": { "201": { "description": "User created" } }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Login",
+        "responses": { "200": { "description": "Return JWT token" } }
+      }
+    },
+    "/products": {
+      "get": {
+        "summary": "Get product list (with pagination)",
+        "responses": { "200": { "description": "Product list" } }
+      }
+    }
+  }
+}
