@@ -12,21 +12,17 @@ const profileRoutes = require("./routes/profile.routes");
 
 const app = express();
 
-// middlewares
-const allowedOrigins = (process.env.CORS_ORIGINS || "http://localhost:3000").split(",");
-
-app.use(cors({
-  origin: function(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("CORS not allowed"));
-    }
-  },
+// middlewares - CORS configuration
+const corsOptions = {
+  origin: process.env.NODE_ENV === "production" 
+    ? ["https://zestora-2zcr.onrender.com", "https://zestora-vercel.vercel.app"]
+    : true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
-}));
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
